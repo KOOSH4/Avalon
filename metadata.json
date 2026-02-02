@@ -1,0 +1,6 @@
+{
+  "name": "Avalon Online",
+  "description": "A web-based implementation of the social deduction game Avalon. Players are secretly assigned to the forces of Good or Evil and must complete or fail quests to determine the winner. Features roles like Merlin, Percival, Morgana, and the Assassin.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
