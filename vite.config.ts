@@ -7,6 +7,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: "/Avalon/", // 👈 REQUIRED for GitHub Pages
+    build: {
+      outDir: "docs",
+    },
 
     server: {
       port: 3000,
