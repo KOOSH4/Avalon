@@ -42,7 +42,7 @@ export default function App(): React.ReactNode {
                 <div className="text-2xl drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] flex items-center justify-center">
                     {GameIcon}
                 </div>
-                <h1 className="text-xl font-lalezar tracking-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" style={{textShadow: '0 0 10px rgba(250, 204, 21, 0.4)'}}>آوالون</h1>
+                <h1 className="text-xl font-lalezar tracking-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" style={{textShadow: '0 0 10px rgba(250, 204, 21, 0.4)'}}>پرونده شرلوک</h1>
             </div>
 
             {/* Buttons on the Top-Left (Second in RTL) */}

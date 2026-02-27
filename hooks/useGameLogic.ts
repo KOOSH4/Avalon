@@ -88,7 +88,7 @@ function gameReducer(state: GameState, action: Action): GameState {
               ...state, 
               phase: GamePhase.TEAM_PROPOSAL, 
               activePlayerIndex: 0,
-              gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم را انتخاب کند.`
+              gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم عملیات را انتخاب کند.`
             };
         }
         return { ...state, activePlayerIndex: nextIndex };
@@ -101,7 +101,7 @@ function gameReducer(state: GameState, action: Action): GameState {
             return { 
                 ...state, 
                 phase: GamePhase.TEAM_PROPOSAL, 
-                gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم را انتخاب کند.`
+                gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم عملیات را انتخاب کند.`
             };
         }
         return { ...state, privateActionStep: nextIndex };
@@ -112,7 +112,7 @@ function gameReducer(state: GameState, action: Action): GameState {
         return { 
             ...state, 
             phase: GamePhase.TEAM_PROPOSAL, 
-            gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم را انتخاب کند.`
+            gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم عملیات را انتخاب کند.`
         };
     }
 
@@ -122,7 +122,7 @@ function gameReducer(state: GameState, action: Action): GameState {
           ...state,
           phase: GamePhase.TEAM_PROPOSAL,
           currentQuestTeam: [],
-          gameMessage: `دور ${state.currentRound + 1} - رأی ${state.voteTrack + 1}: ${leader.name}، لطفاً ${state.quests[state.currentRound].teamSize} نفر را برای مأموریت انتخاب کن.`
+          gameMessage: `دور ${state.currentRound + 1} - رأی ${state.voteTrack + 1}: ${leader.name}، لطفاً ${state.quests[state.currentRound].teamSize} نفر را برای عملیات انتخاب کن.`
       };
     }
 
@@ -150,12 +150,12 @@ function gameReducer(state: GameState, action: Action): GameState {
           quests: state.quests.map((q, i) => i === state.currentRound ? { ...q, team: state.currentQuestTeam } : q),
           activePlayerIndex: state.players.findIndex(p => p.id === state.currentQuestTeam[0].id),
           temporaryQuestOutcomes: [],
-          gameMessage: `تیم تأیید شد! اعضای تیم مأموریت لطفاً رأی خود را ثبت کنند.`
+          gameMessage: `تیم تأیید شد! اعضای تیم عملیات لطفاً رأی خود را ثبت کنند.`
         };
       } else {
         const newVoteTrack = state.voteTrack + 1;
         if (newVoteTrack >= 5) {
-          return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, gameMessage: '۵ رأی ناموفق متوالی! نیروهای شر پیروز شدند. 👎' };
+          return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, gameMessage: '۵ رأی ناموفق متوالی! مافیا پیروز شد. 👎' };
         }
         const newLeaderIndex = (state.currentLeaderIndex + 1) % state.players.length;
         const leader = state.players[newLeaderIndex];
@@ -165,7 +165,7 @@ function gameReducer(state: GameState, action: Action): GameState {
           voteTrack: newVoteTrack,
           currentLeaderIndex: newLeaderIndex,
           currentQuestTeam: [],
-          gameMessage: `رأی‌گیری ناموفق بود. رهبر جدید: ${leader.name}.`
+          gameMessage: `رأی‌گیری ناموفق بود. سرگروه جدید: ${leader.name}.`
         };
       }
     }
@@ -204,10 +204,10 @@ function gameReducer(state: GameState, action: Action): GameState {
 
       if (goodWins >= 3) {
         const assassin = state.players.find(p => p.role === Role.Assassin);
-        return { ...state, phase: GamePhase.ASSASSINATION, assassin, quests: updatedQuests, gameMessage: "نیکان در ۳ مأموریت پیروز شدند! 🏆 آدمکش باید مرلین را پیدا کند." };
+        return { ...state, phase: GamePhase.ASSASSINATION, assassin, quests: updatedQuests, gameMessage: "شهروندان در ۳ عملیات پیروز شدند! 🏆 قاتل حرفه‌ای باید شرلوک را پیدا کند." };
       }
       if (evilWins >= 3) {
-        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, quests: updatedQuests, gameMessage: "شروران در ۳ مأموریت پیروز شدند! 💀" };
+        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, quests: updatedQuests, gameMessage: "مافیا در ۳ عملیات پیروز شد! 💀" };
       }
 
       const newLeaderIndex = (state.currentLeaderIndex + 1) % state.players.length;
@@ -220,21 +220,21 @@ function gameReducer(state: GameState, action: Action): GameState {
         voteTrack: 0,
         quests: updatedQuests,
         currentQuestTeam: [],
-        gameMessage: `مأموریت ${didFail ? 'ناموفق بود ❌' : 'موفق بود ✅'}. رهبر جدید: ${leader.name}.`,
+        gameMessage: `عملیات ${didFail ? 'ناموفق بود ❌' : 'موفق بود ✅'}. سرگروه جدید: ${leader.name}.`,
       };
     }
     
     case 'START_ASSASSINATION': {
         const assassin = state.players.find(p => p.role === Role.Assassin);
-        return { ...state, phase: GamePhase.ASSASSINATION, assassin, gameMessage: `${assassin?.name}، شما باید مرلین را شناسایی کنید.` };
+        return { ...state, phase: GamePhase.ASSASSINATION, assassin, gameMessage: `${assassin?.name}، شما باید شرلوک را شناسایی و ترور کنید.` };
     }
 
     case 'ASSASSINATE': {
       const { target } = action;
       if (target.role === Role.Merlin) {
-        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, gameMessage: `آدمکش مرلین را پیدا کرد! 🎯 شروران پیروز شدند.` };
+        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Evil, gameMessage: `قاتل حرفه‌ای شرلوک را ترور کرد! 🎯 مافیا پیروز شد.` };
       } else {
-        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Good, gameMessage: `حدس آدمکش اشتباه بود! نیکان پیروز شدند. 🎉` };
+        return { ...state, phase: GamePhase.GAME_OVER, winner: Team.Good, gameMessage: `حدس قاتل حرفه‌ای اشتباه بود! شهروندان پیروز شدند. 🎉` };
       }
     }
 

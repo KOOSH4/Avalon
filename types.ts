@@ -2,25 +2,25 @@
 import React from 'react';
 
 export enum Team {
-  Good = 'نیک',
-  Evil = 'شر',
+  Good = 'شهروند',
+  Evil = 'مافیا',
 }
 
 export enum Role {
   // Good Roles
-  Merlin = 'مرلین',
-  Percival = 'پرسیوال',
-  LoyalServant = 'خدمتگزار وفادار آرتور',
-  Tristan = 'تریستان',
-  Isolde = 'ایزولت',
+  Merlin = 'شرلوک',
+  Percival = 'واتسون',
+  LoyalServant = 'شهروند ساده',
+  Tristan = 'سرباز صفر (۱)',
+  Isolde = 'سرباز صفر (۲)',
   // Evil Roles
-  Morgana = 'مورگانا',
-  Assassin = 'آدمکش',
-  Mordred = 'موردرد',
-  Oberon = 'اوبرون',
+  Morgana = 'جاسوس',
+  Assassin = 'قاتل حرفه‌ای',
+  Mordred = 'پدرخوانده',
+  Oberon = 'شهروند خبیث',
   // Expansion Roles
-  Agravaine = 'آگراوین',
-  Lancelot = 'لنسلات',
+  Agravaine = 'مافیای ساده',
+  Lancelot = 'پلیس فاسد',
 }
 
 export interface RoleInfo {
