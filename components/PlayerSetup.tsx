@@ -1,6 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { GAME_CONFIG } from '../game-config';
+import { ROLE_CONFIGURATIONS } from '../constants';
+import { Team } from '../types';
 
 interface PlayerSetupProps {
   onSetupComplete: (playerCount: number, playerNames: string[], useNarratedNight: boolean, useExpansion: boolean) => void;
@@ -76,6 +78,21 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({ onSetupComplete }) => {
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-yellow-500">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
                     </div>
+                </div>
+            </div>
+
+            {/* Role Preview */}
+            <div className="bg-gray-800/20 rounded-[1.5rem] p-4 border border-white/5">
+                <p className="text-[10px] text-gray-500 font-black tracking-widest uppercase mb-3 text-center">نقش‌های این دور</p>
+                <div className="flex flex-wrap gap-1.5 justify-center mb-2">
+                    {ROLE_CONFIGURATIONS[playerCount]?.good.map((r, i) => (
+                        <span key={`g${i}`} className="px-2.5 py-1 bg-blue-900/30 border border-blue-500/20 rounded-full text-blue-300 text-[10px] font-bold">{r}</span>
+                    ))}
+                </div>
+                <div className="flex flex-wrap gap-1.5 justify-center">
+                    {ROLE_CONFIGURATIONS[playerCount]?.evil.map((r, i) => (
+                        <span key={`e${i}`} className="px-2.5 py-1 bg-red-900/30 border border-red-500/20 rounded-full text-red-300 text-[10px] font-bold">{r}</span>
+                    ))}
                 </div>
             </div>
 

@@ -63,6 +63,40 @@
       .safe-top { padding-top: var(--sat); }
       .safe-bottom { padding-bottom: var(--sab); }
       .safe-p { padding: var(--sat) var(--sar) var(--sab) var(--sal); }
+
+      /* Staggered animation for lists */
+      .animate-stagger-in > * {
+        animation: fadeIn 0.4s ease-out both;
+      }
+      .animate-stagger-in > *:nth-child(1) { animation-delay: 0.05s; }
+      .animate-stagger-in > *:nth-child(2) { animation-delay: 0.1s; }
+      .animate-stagger-in > *:nth-child(3) { animation-delay: 0.15s; }
+      .animate-stagger-in > *:nth-child(4) { animation-delay: 0.2s; }
+      .animate-stagger-in > *:nth-child(5) { animation-delay: 0.25s; }
+
+      /* Subtle noise texture overlay for depth */
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+      }
+
+      /* Glow button effect */
+      .glow-amber {
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.25), 0 4px 15px rgba(0,0,0,0.4);
+      }
+
+      /* Smooth scale for interactive elements */
+      .press-scale {
+        transition: transform 0.15s ease;
+      }
+      .press-scale:active {
+        transform: scale(0.96);
+      }
     </style>
   <script type="importmap">
 {

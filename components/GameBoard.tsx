@@ -255,7 +255,7 @@ const Assassination: React.FC<GameBoardProps> = ({ gameState, assassinate }) => 
                 <div className="text-7xl mb-8">🎯</div>
                 <h3 className="text-3xl font-lalezar text-white mb-4">تایید سوءقصد</h3>
                 <p className="text-lg text-gray-300 mb-12 leading-relaxed">
-                    آیا اطمینان دارید که <span className="font-black text-rose-400 px-3 py-1 bg-black/60 rounded-xl border border-rose-500/30">{targetToConfirm.name}</span> مرلین واقعی است؟
+                    آیا اطمینان دارید که <span className="font-black text-rose-400 px-3 py-1 bg-black/60 rounded-xl border border-rose-500/30">{targetToConfirm.name}</span> شرلوک واقعی است؟
                 </p>
                 <div className="flex w-full gap-4 max-w-xs">
                     <button 
@@ -278,7 +278,7 @@ const Assassination: React.FC<GameBoardProps> = ({ gameState, assassinate }) => 
             <div className="mb-8 mt-2">
                 <div className="text-7xl mb-6">🗡️</div>
                 <h2 className="text-3xl font-lalezar text-rose-500 mb-2">لحظه انتقام</h2>
-                <p className="text-gray-400 text-sm font-bold italic">آدمکش ({assassin?.name})، مرلین را هدف بگیر!</p>
+                <p className="text-gray-400 text-sm font-bold italic">قاتل ({assassin?.name})، شرلوک را هدف بگیر!</p>
             </div>
             
             <div className="grid grid-cols-2 gap-4 flex-grow overflow-y-auto pr-1 py-2">
@@ -298,7 +298,7 @@ const GameOver: React.FC<GameBoardProps> = ({ gameState, resetGame }) => {
     const isGoodWins = winner === Team.Good;
 
     return (
-        <Modal title="سرانجام نبرد" onClose={resetGame} buttonText="بازگشت به منوی اصلی 🏰">
+        <Modal title="پایان پرونده" onClose={resetGame} buttonText="بازگشت به منوی اصلی 🏰">
             <div className="text-center py-2">
                 <div className="text-8xl mb-8 drop-shadow-3xl transform hover:scale-110 transition-transform">
                     {isGoodWins ? '🏆' : '🔥'}
@@ -311,7 +311,7 @@ const GameOver: React.FC<GameBoardProps> = ({ gameState, resetGame }) => {
                 <p className="text-base text-yellow-500 font-bold mb-8 bg-yellow-500/10 py-4 px-6 rounded-[1.5rem] border border-yellow-500/20">{gameMessage}</p>
                 
                 <div className="space-y-3 text-right max-h-[35vh] overflow-y-auto custom-scrollbar pr-3">
-                    <p className="text-[10px] font-black text-gray-500 tracking-[0.2em] text-center uppercase mb-3">افشای هویت‌ها</p>
+                    <p className="text-[10px] font-black text-gray-500 tracking-[0.2em] text-center uppercase mb-3">افشای هویت بازیکنان</p>
                      {players.map(p => (
                         <div key={p.id} className={`flex justify-between items-center p-4 rounded-[1.5rem] border ${p.team === Team.Good ? 'bg-blue-900/20 border-blue-500/20 shadow-blue-900/10' : 'bg-rose-900/20 border-rose-500/20 shadow-rose-900/10'} shadow-md mb-2`}>
                             <div className="flex items-center gap-3">

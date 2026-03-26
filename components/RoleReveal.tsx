@@ -2,7 +2,7 @@
 import React from 'react';
 import PrivacyScreen from './PrivacyScreen';
 import { useGameLogic } from '../hooks/useGameLogic';
-import { ROLE_DATA, STRINGS_FA } from '../constants';
+import { ROLE_DATA, STRINGS_FA, ROLE_TAGLINES } from '../constants';
 import { Team, Player } from '../types';
 
 type RoleRevealProps = ReturnType<typeof useGameLogic>;
@@ -36,6 +36,9 @@ const RoleCard: React.FC<{ player: Player, allPlayers: Player[] }> = ({ player, 
         <h2 className={`text-4xl font-black text-gray-100 tracking-tighter`}>
           {roleInfo.name}
         </h2>
+        {ROLE_TAGLINES[player.role] && (
+          <p className="text-yellow-500/80 font-bold text-xs tracking-widest uppercase">{ROLE_TAGLINES[player.role]}</p>
+        )}
         <p className={`${teamColor} font-bold tracking-widest text-sm uppercase`}>تیم {player.team}</p>
       </div>
       

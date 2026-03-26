@@ -200,3 +200,17 @@ export const GameIcon = (
 export const CrownIcon = (
     <span className="text-2xl drop-shadow-md">🎖️</span>
 );
+
+export const ROLE_TAGLINES: Partial<Record<Role, string>> = {
+  [Role.Merlin]: GAME_CONFIG.roles.merlin.tagline,
+  [Role.Percival]: GAME_CONFIG.roles.percival.tagline,
+  [Role.LoyalServant]: GAME_CONFIG.roles.servant.tagline,
+  [Role.Tristan]: GAME_CONFIG.roles.tristan.tagline,
+  [Role.Isolde]: GAME_CONFIG.roles.isolde.tagline,
+  [Role.Morgana]: GAME_CONFIG.roles.morgana.tagline,
+  [Role.Assassin]: GAME_CONFIG.roles.assassin.tagline,
+  [Role.Mordred]: GAME_CONFIG.roles.mordred.tagline,
+  [Role.Oberon]: GAME_CONFIG.roles.oberon.tagline,
+  [Role.Agravaine]: GAME_CONFIG.roles.agravaine.tagline,
+  [Role.Lancelot]: GAME_CONFIG.roles.lancelot.tagline,
+};
