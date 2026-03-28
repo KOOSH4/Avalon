@@ -83,13 +83,7 @@ function gameReducer(state: GameState, action: Action): GameState {
             if (state.useNarratedNight) {
                 return { ...state, phase: GamePhase.NARRATED_NIGHT, activePlayerIndex: 0 };
             }
-            const leader = state.players[state.currentLeaderIndex];
-            return { 
-              ...state, 
-              phase: GamePhase.TEAM_PROPOSAL, 
-              activePlayerIndex: 0,
-              gameMessage: `دور ۱ - رأی ۱: نوبت ${leader.name} است تا تیم عملیات را انتخاب کند.`
-            };
+            return { ...state, phase: GamePhase.NARRATED_NIGHT, privateActionStep: 0, activePlayerIndex: 0 };
         }
         return { ...state, activePlayerIndex: nextIndex };
     }
@@ -264,9 +258,7 @@ export const useGameLogic = () => {
     }, []);
     
     const resetGame = useCallback(() => {
-        if (window.confirm(GAME_CONFIG.ui.resetConfirm)) {
-            dispatch({ type: 'RESET_GAME' });
-        }
+        dispatch({ type: 'RESET_GAME' });
     }, []);
 
     return {
