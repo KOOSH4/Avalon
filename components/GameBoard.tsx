@@ -1,5 +1,11 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+
+const haptic = (pattern: number | number[]) => {
+  if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+    navigator.vibrate(pattern);
+  }
+};
 import { useGameLogic } from '../hooks/useGameLogic';
 import { GamePhase, Player, QuestResult, Team } from '../types';
 import { CrownIcon } from '../constants';
@@ -152,7 +158,24 @@ const TeamProposal: React.FC<GameBoardProps> = ({ gameState, selectTeamMember, p
 const TeamVote: React.FC<GameBoardProps> = ({ gameState, handleTeamVote }) => {
   const { currentQuestTeam, players, currentLeaderIndex, voteTrack } = gameState;
   const leader = players[currentLeaderIndex];
-  const [ready, setReady] = useState(false);
+  const [phase, setPhase] = useState<'prep' | 'countdown' | 'reveal'>('prep');
+  const [count, setCount] = useState(3);
+
+  useEffect(() => {
+    if (phase !== 'countdown') return;
+    if (count === 0) {
+      const t = setTimeout(() => setPhase('reveal'), 350);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setCount(c => c - 1), 700);
+    return () => clearTimeout(t);
+  }, [phase, count]);
+
+  const startCountdown = () => {
+    setCount(3);
+    setPhase('countdown');
+    if ('vibrate' in navigator) navigator.vibrate([50, 50, 50]);
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between text-center gap-4">
@@ -179,21 +202,36 @@ const TeamVote: React.FC<GameBoardProps> = ({ gameState, handleTeamVote }) => {
         <p className="text-xs font-black text-rose-400">رد تیمی: {voteTrack} از ۵</p>
       )}
 
-      {!ready ? (
+      {phase === 'prep' && (
         <div className="w-full space-y-3">
           <p className="text-gray-300 text-sm font-bold leading-relaxed">
             همه شست خود را آماده کنید —<br />
             بالا = موافق، پایین = مخالف
           </p>
           <button
-            onClick={() => setReady(true)}
+            onClick={startCountdown}
             className="w-full py-5 bg-gradient-to-r from-yellow-600 to-amber-700 text-slate-950 font-lalezar text-xl rounded-2xl shadow-[0_8px_30px_rgba(202,138,4,0.4)] active:scale-95 transition-all border-t border-white/30"
           >
             همه آماده‌اند — اعلام کنید!
           </button>
         </div>
-      ) : (
-        <div className="w-full space-y-3">
+      )}
+
+      {phase === 'countdown' && (
+        <div className="w-full flex flex-col items-center justify-center gap-2 py-2">
+          <p className="text-gray-400 text-sm font-bold">آرای خود را اعلام کنید!</p>
+          <div
+            key={count}
+            className="animate-count-pulse text-8xl font-lalezar text-yellow-400"
+            style={{ textShadow: '0 0 40px rgba(250,204,21,0.7)' }}
+          >
+            {count === 0 ? '🎉' : count}
+          </div>
+        </div>
+      )}
+
+      {phase === 'reveal' && (
+        <div className="w-full space-y-3 animate-fade-in">
           <p className="text-white font-black text-lg">نتیجه رأی‌گیری چیست؟</p>
           <div className="flex gap-3">
             <button
@@ -243,7 +281,7 @@ const QuestExecution: React.FC<GameBoardProps> = ({ gameState, submitQuestOutcom
             <p className="text-gray-400 text-sm font-bold">گوشی را به نفر بعدی بدهید</p>
           </div>
           <button
-            onClick={() => submitQuestOutcome(voted)}
+            onClick={() => { haptic(30); submitQuestOutcome(voted); }}
             className="w-full max-w-xs py-5 bg-gradient-to-r from-yellow-600 to-amber-700 text-slate-950 font-lalezar text-xl rounded-2xl shadow-[0_8px_25px_rgba(202,138,4,0.4)] active:scale-95 transition-all border-t border-white/20"
           >
             تحویل دادم →
@@ -262,13 +300,13 @@ const QuestExecution: React.FC<GameBoardProps> = ({ gameState, submitQuestOutcom
 
         <div className="flex flex-col w-full gap-4 max-w-xs mb-6">
           <button
-            onClick={() => setVoted('Success')}
+            onClick={() => { haptic(40); setVoted('Success'); }}
             className="w-full py-7 text-2xl font-black bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-[2rem] shadow-2xl shadow-blue-900/60 active:scale-95 transition-all border-t border-white/20"
           >
             ✨ پیروزی
           </button>
           <button
-            onClick={() => setVoted('Fail')}
+            onClick={() => { haptic([60, 30, 60]); setVoted('Fail'); }}
             disabled={!canFail}
             className={`w-full py-7 text-2xl font-black rounded-[2rem] shadow-2xl active:scale-95 transition-all border-t border-white/10 ${
               !canFail
@@ -335,17 +373,17 @@ const QuestResultDisplay: React.FC<GameBoardProps> = ({ gameState, processQuestR
           {didFail ? 'مأموریت ناموفق بود!' : 'مأموریت موفق بود!'}
         </h3>
 
-        {/* Outcome cards */}
-        <div className="flex justify-center gap-3 py-4">
+        {/* Outcome cards with flip animation */}
+        <div className="flex justify-center gap-3 py-4 card-flip-container">
           {outcomes.map((o, i) => (
             <div
               key={i}
-              className={`w-14 h-20 rounded-2xl flex items-center justify-center text-3xl border-2 shadow-xl animate-fade-in ${
+              className={`card-flip w-14 h-20 rounded-2xl flex items-center justify-center text-3xl border-2 shadow-xl ${
                 o === 'Success'
-                  ? 'bg-blue-600/30 border-blue-500/50 text-blue-300 rotate-1'
-                  : 'bg-rose-600/30 border-rose-500/50 text-rose-300 -rotate-1'
+                  ? 'bg-blue-600/30 border-blue-500/50 text-blue-300'
+                  : 'bg-rose-600/30 border-rose-500/50 text-rose-300'
               }`}
-              style={{ animationDelay: `${i * 400}ms` }}
+              style={{ animationDelay: `${i * 420}ms` }}
             >
               {o === 'Success' ? '✨' : '💥'}
             </div>
@@ -394,7 +432,7 @@ const Assassination: React.FC<GameBoardProps> = ({ gameState, assassinate }) => 
         </div>
         <div className="flex w-full gap-3 max-w-xs">
           <button
-            onClick={() => assassinate(targetToConfirm)}
+            onClick={() => { haptic([100, 50, 100, 50, 200]); assassinate(targetToConfirm); }}
             className="flex-1 py-5 text-lg font-black bg-gradient-to-br from-rose-600 to-rose-800 text-white rounded-2xl shadow-2xl shadow-rose-900/60 active:scale-95 transition-all border-t border-white/20"
           >
             اجرای حکم 🎯

@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { GAME_CONFIG } from '../game-config';
-import { ROLE_CONFIGURATIONS } from '../constants';
+import { getExpandedConfig } from '../constants';
 import { Team } from '../types';
 
 interface PlayerSetupProps {
@@ -82,52 +82,64 @@ const PlayerSetup: React.FC<PlayerSetupProps> = ({ onSetupComplete }) => {
             </div>
 
             {/* Role Preview */}
-            <div className="bg-gray-800/20 rounded-[1.5rem] p-4 border border-white/5">
-                <p className="text-[10px] text-gray-500 font-black tracking-widest uppercase mb-3 text-center">نقش‌های این دور</p>
-                <div className="flex flex-wrap gap-1.5 justify-center mb-2">
-                    {ROLE_CONFIGURATIONS[playerCount]?.good.map((r, i) => (
-                        <span key={`g${i}`} className="px-2.5 py-1 bg-blue-900/30 border border-blue-500/20 rounded-full text-blue-300 text-[10px] font-bold">{r}</span>
-                    ))}
-                </div>
-                <div className="flex flex-wrap gap-1.5 justify-center">
-                    {ROLE_CONFIGURATIONS[playerCount]?.evil.map((r, i) => (
-                        <span key={`e${i}`} className="px-2.5 py-1 bg-red-900/30 border border-red-500/20 rounded-full text-red-300 text-[10px] font-bold">{r}</span>
-                    ))}
-                </div>
-            </div>
+            {(() => {
+                const config = getExpandedConfig(playerCount, useExpansion);
+                const pivotal = new Set(['شرلوک', 'قاتل حرفه‌ای', 'واتسون', 'جاسوس']);
+                return (
+                    <div className="bg-gray-800/20 rounded-[1.5rem] p-4 border border-white/5">
+                        <p className="text-[10px] text-gray-500 font-black tracking-widest uppercase mb-3 text-center">نقش‌های این دور</p>
+                        <div className="flex flex-wrap gap-1.5 justify-center mb-2">
+                            {config?.good.map((r, i) => (
+                                <span key={`g${i}`} className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${pivotal.has(r) ? 'bg-blue-600/40 border-blue-400/40 text-blue-200 shadow-[0_0_8px_rgba(59,130,246,0.3)]' : 'bg-blue-900/30 border-blue-500/20 text-blue-300'}`}>{r}</span>
+                            ))}
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 justify-center">
+                            {config?.evil.map((r, i) => (
+                                <span key={`e${i}`} className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${pivotal.has(r) ? 'bg-red-600/40 border-red-400/40 text-red-200 shadow-[0_0_8px_rgba(239,68,68,0.3)]' : 'bg-red-900/30 border-red-500/20 text-red-300'}`}>{r}</span>
+                            ))}
+                        </div>
+                    </div>
+                );
+            })()}
 
             <div className="grid grid-cols-1 gap-3">
-                {/* Night Toggle - Flipped for Screenshot Matching */}
+                {/* Night Toggle */}
                 <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-[2rem] border border-white/5 backdrop-blur-md shadow-lg transition-all active:scale-[0.98]">
-                    <label className="relative inline-flex items-center cursor-pointer tap-highlight-transparent order-1">
+                    <label className="relative inline-flex items-center cursor-pointer tap-highlight-transparent order-1 flex-shrink-0">
                         <input type="checkbox" checked={useNarratedNight} onChange={() => setUseNarratedNight(!useNarratedNight)} className="sr-only peer" />
                         <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[20px] after:w-[20px] after:transition-all peer-checked:bg-amber-500 shadow-inner border border-white/10"></div>
                     </label>
-                    <span className="text-sm font-black text-gray-200 order-2">تأیید گروهی شب 🌙</span>
+                    <div className="order-2 text-right mr-3">
+                        <p className="text-sm font-black text-gray-200">تأیید گروهی شب 🌙</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{useNarratedNight ? 'یک نفر متن شب را بلند می‌خواند' : 'هر بازیکن نقشش را جداگانه می‌بیند'}</p>
+                    </div>
                 </div>
 
-                {/* Expansion Toggle - Flipped for Screenshot Matching */}
+                {/* Expansion Toggle */}
                 <div className="flex items-center justify-between p-4 bg-purple-900/10 rounded-[2rem] border border-purple-500/20 backdrop-blur-md shadow-lg transition-all active:scale-[0.98]">
-                    <label className="relative inline-flex items-center cursor-pointer tap-highlight-transparent order-1">
+                    <label className="relative inline-flex items-center cursor-pointer tap-highlight-transparent order-1 flex-shrink-0">
                         <input type="checkbox" checked={useExpansion} onChange={() => setUseExpansion(!useExpansion)} className="sr-only peer" />
                         <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[20px] after:w-[20px] after:transition-all peer-checked:bg-purple-500 shadow-inner border border-white/10"></div>
                     </label>
-                    <span className="text-sm font-black text-purple-300 order-2">{GAME_CONFIG.ui.expansionLabel} ⚔️</span>
+                    <div className="order-2 text-right mr-3">
+                        <p className="text-sm font-black text-purple-300">نقش‌های پیشرفته ⚔️</p>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{useExpansion ? 'پلیس فاسد و شهروند خبیث اضافه می‌شوند' : 'فقط نقش‌های پایه'}</p>
+                    </div>
                 </div>
             </div>
 
             <div className="space-y-3">
-                <label className="block text-xs text-gray-400 pr-2 font-black text-right">اسامی مبارزان</label>
-                <div className="grid grid-cols-1 gap-2.5">
+                <label className="block text-xs text-gray-400 pr-2 font-black text-right">اسامی بازیکنان</label>
+                <div className={`grid gap-2.5 ${playerCount >= 7 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                     {playerNames.map((name, index) => (
                         <input
                             key={index}
                             type="text"
-                            placeholder={GAME_CONFIG.defaultPlayerNames[index] || `مبارز ${index + 1}`}
+                            placeholder={GAME_CONFIG.defaultPlayerNames[index] || `بازیکن ${index + 1}`}
                             value={name}
                             onChange={(e) => handleNameChange(index, e.target.value)}
                             onFocus={(e) => e.target.select()}
-                            className="w-full p-4 bg-gray-800/20 border border-gray-700/30 rounded-[1.5rem] text-white text-center placeholder-gray-500/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:bg-gray-800/40 transition-all font-bold text-base shadow-sm"
+                            className="w-full p-3 bg-gray-800/20 border border-gray-700/30 rounded-2xl text-white text-center placeholder-gray-500/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:bg-gray-800/40 transition-all font-bold text-sm shadow-sm"
                         />
                     ))}
                 </div>

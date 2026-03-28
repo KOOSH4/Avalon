@@ -97,6 +97,49 @@
       .press-scale:active {
         transform: scale(0.96);
       }
+
+      /* Card flip animation for quest results */
+      .card-flip-container {
+        perspective: 600px;
+      }
+      .card-flip {
+        transform-style: preserve-3d;
+        animation: cardFlip 0.6s ease forwards;
+        opacity: 0;
+      }
+      @keyframes cardFlip {
+        0%   { opacity: 1; transform: rotateY(-90deg) scale(0.8); }
+        60%  { transform: rotateY(8deg) scale(1.05); }
+        100% { opacity: 1; transform: rotateY(0deg) scale(1); }
+      }
+
+      /* Countdown pulse */
+      @keyframes countPulse {
+        0%   { transform: scale(0.4); opacity: 0; }
+        50%  { transform: scale(1.15); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-count-pulse {
+        animation: countPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      /* CSS design tokens */
+      :root {
+        --color-good: #3b82f6;
+        --color-evil: #ef4444;
+        --color-gold: #f59e0b;
+        --color-surface: rgba(15, 23, 42, 0.95);
+        --radius-card: 2.5rem;
+        --radius-btn: 1.5rem;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
     </style>
   <script type="importmap">
 {
